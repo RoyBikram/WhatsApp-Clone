@@ -1,0 +1,55 @@
+.Message {
+    padding: 6px 7px 8px 9px;
+    background-color: white;
+    width: fit-content;
+    font-size: 14px;
+    color: #303030;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0px 0px 2px 0px #a1a1a1;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    max-width: 515px;
+    padding-right: 54px;
+    margin: 2px 0px;
+    .Arrow {
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 12px solid white;
+        position: absolute;
+        top: 0;
+        left: -7px;
+        &::before {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 12px solid #a1a1a1;
+            position: absolute;
+            top: -12px;
+            left: -8px;
+            z-index: -1;
+            filter: blur(1px);
+        }
+    }
+    .Time {
+        position: absolute;
+        bottom: 4px;
+        right: 8px;
+        color: #00000073;
+        font-size: 11px;
+    }
+}
+
+.OwnMessage {
+    background-color: rgb(221, 247, 201);
+    // float: right;
+    align-self: flex-end;
+    .Arrow {
+        left: calc(100% - 8px);
+        border-top: 12px solid rgb(221, 247, 201);
+    }
+}

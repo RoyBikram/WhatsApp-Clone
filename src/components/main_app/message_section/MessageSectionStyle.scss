@@ -1,0 +1,167 @@
+.MessageSection {
+    flex: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    .Header {
+        height: 60px;
+        width: 100%;
+        flex: none;
+        display: flex;
+        align-items: center;
+        background-color: rgb(237, 237, 237);
+        padding: 0px 16px;
+        .Container {
+            margin-left: 15px;
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+
+            .TextContainer {
+                .Name {
+                    font-size: 16px;
+                }
+                .LastSeen {
+                    font-size: 13px;
+                    color: rgb(143, 143, 143);
+
+                }
+            }
+            .ButtonsContainer {
+                display: flex;
+                .IconContainer {
+                    height: 40px;
+                    width: 40px;
+                    border-radius: 50%;
+                    transition: all 0.3s;
+                    display: grid;
+                    place-items: center;
+                    &:hover {
+                        background-color: rgb(211, 211, 211);
+                    }
+                    .SearchIcon,.DotsIcon {
+                        path {
+                            fill: rgb(81, 88, 92);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .MessageBody {
+        flex-grow: 1;
+        position: relative;
+        background-color: rgb(233, 227, 220);
+        display: flex;
+        justify-content: center;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        /* Track */
+        &::-webkit-scrollbar-track {
+            background: #ffffff00; 
+        }
+        
+        /* Handle */
+        &::-webkit-scrollbar-thumb {
+            background: rgb(204, 204, 204); 
+        }
+
+        .MessageContainer {
+            height: fit-content;
+            width: 100%;
+            z-index: 10;
+            padding: 20px 8%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background-color: rgb(233, 227, 220);
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-image: url('../../../assets/img/message_body_bg.png');
+                opacity: 0.07;
+            }
+            
+        }
+
+    }
+
+    .Footer {
+        flex: none;
+        height: fit-content;
+        width: 100%;
+        background-color: rgb(237, 237, 237);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0px 16px;
+        .LeftButtonsContainer {
+            display: flex;
+            margin-right: 12px;
+            .IconContainer {
+                height: 40px;
+                width: 40px;
+                border-radius: 50%;
+                transition: all 0.3s;
+                display: grid;
+                place-items: center;
+                &:hover {
+                    background-color: rgb(211, 211, 211);
+                }
+                .EmojiIcon,.DocumentIcon {
+                    path {
+                        fill: rgb(81, 88, 92);
+                    }
+                }
+            }
+        }
+        .RightButtonsContainer {
+            margin-left: 12px;
+            .IconContainer {
+                height: 40px;
+                width: 40px;
+                border-radius: 50%;
+                transition: all 0.3s;
+                display: grid;
+                place-items: center;
+                &:hover {
+                    background-color: rgb(211, 211, 211);
+                }
+                .MicIcon {
+                    path {
+                        fill: rgb(81, 88, 92);
+                    }
+                }
+            }
+        }
+        form {
+            flex-grow: 1;
+            .TypingAria {
+                width: 100%;
+                padding: 0px 20px;
+                margin: 10px 0px;
+                height: 42px;
+                font-size: 15px;
+                color: #4A4A4A;
+                border-radius: 25px;
+                outline: none;
+                border: none;
+                
+            }
+            .SubmitButton {
+                display: none;
+            }
+        }
+    }
+    
+}

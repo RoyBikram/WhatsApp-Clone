@@ -1,0 +1,106 @@
+.SideSection {
+    width: 35%;
+    max-width: 420px;
+    min-width: 300px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: none;
+    border-right: 1px solid rgb(211, 211, 211);
+    .Header {
+        height: 60px;
+        width: 100%;
+        padding: 0px 25px 0px 15px;
+        background-color: rgb(237, 237, 237);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex: none;
+
+        .HeaderButtonsContainer {
+            width: 140px;
+            height: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .IconContainer {
+                height: 40px;
+                width: 40px;
+                border-radius: 50%;
+                display: grid;
+                place-items: center;
+                transition: all 0.3s;
+                &:hover {
+                    background-color: rgb(211, 211, 211);
+                }
+                .StatusIcon,
+                .DotsIcon,
+                .MessageIcon {
+                    height: 24px;
+                    width: 24px;
+                    path {
+                        fill: rgb(81, 88, 92);
+                    }
+                }
+            }
+        }
+    }
+    .Search {
+        height: 50px;
+        width: 100%;
+        background-color: rgb(246, 246, 246);
+        padding: 7px 12px;
+        flex: none;
+        border-bottom: 1px solid rgb(235, 235, 235);
+        .SearchContainer {
+            background-color: white;
+            border-radius: 25px;
+            height: 100%;
+            width: 100%;
+            padding: 0px 15px;
+            display: flex;
+            align-items: center;
+            .SearchIcon {
+                height: 19px;
+                width: 19px;
+                path {
+                    fill: rgb(81, 88, 92);
+                }
+            }
+            .SearchInput {
+                background-color: transparent;
+                border: none;
+                outline: transparent;
+                padding: 0px 30px;
+                font-size: 14px;
+                &::placeholder {
+                    color: rgb(167, 167, 167);
+                }
+                &::-ms-input-placeholder {
+                    /* Microsoft Edge */
+                    color: rgb(167, 167, 167);
+                }
+            }
+        }
+    }
+    .MessageOverviewList {
+        flex-grow: 1;
+        // padding-right: 5px;
+        overflow-y: auto;
+        /* width */
+        height: max-content;
+        &::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        /* Track */
+        &::-webkit-scrollbar-track {
+            background: #ffffff;
+        }
+
+        /* Handle */
+        &::-webkit-scrollbar-thumb {
+            background: rgb(204, 204, 204);
+        }
+    }
+}

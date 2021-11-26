@@ -1,0 +1,43 @@
+.MessageOverview {
+    height: 72px;
+    width: 100%;
+    display: flex;
+    transition: all 0.3s;
+    padding-right: 10px;
+    cursor: pointer;
+    &:hover {
+        background-color: rgb(235, 235, 235);
+    }
+    .ProfileContainer {
+        height: 100%;
+        width: 77px;
+        display: grid;
+        place-items: center;
+    }
+    .TextContainer {
+        border-bottom: 1px solid rgb(235, 235, 235);
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+        flex: auto;
+        .NameContainer {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            .Name {
+                font-size: 17px;
+            }
+            .Time {
+                font-size: 12px;
+                line-height: 12px;
+                align-self: center;
+                color: rgb(143, 143, 143);
+            }
+        }
+        .LastMessage {
+            font-size: 14px;
+            color: rgb(109, 109, 109);
+        }
+    }
+}

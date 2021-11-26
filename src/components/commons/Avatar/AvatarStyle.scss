@@ -1,0 +1,15 @@
+.Avatar {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background-color: rgb(255, 168, 168);
+    img {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+    }
+}
+.SmallAvatar {
+    height: 40px;
+    width: 40px;
+}

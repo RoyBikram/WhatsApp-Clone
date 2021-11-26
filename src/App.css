@@ -1,0 +1,8 @@
+.App {
+    height: 100vh;
+    width: 100vw;
+    background-image: linear-gradient(0deg, rgb(210, 219, 219) 87%,
+    rgb(15, 150, 136) 13%);
+    display: grid;
+    place-items: center;
+}
