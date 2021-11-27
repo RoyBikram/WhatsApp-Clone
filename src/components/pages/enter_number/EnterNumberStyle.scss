@@ -1,0 +1,64 @@
+.EnterNumber {
+    .Container {
+        width: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .WhatsAppIcon {
+            height: 110px;
+            margin-bottom: 50px;
+        } 
+        .Heading {
+            font-size: 20px;
+            text-align: center;
+            color: #0c7c71;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        .DescriptionText {
+            color: rgb(78, 78, 78);
+            margin-bottom: 80px;
+        }
+        .InputNumber {
+            font-size: 24px;
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid #0c7c71;
+            outline: none;
+            color: rgb(78, 78, 78);
+            width: 200px;
+            text-align: center;
+            margin-bottom: 100px;
+            padding-bottom: 10px;
+            &:focus {
+            border-bottom: 2px solid #0c7c71;
+            margin-bottom: 99px;
+            }
+        }
+        // To remove the number change button
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        // Increase the placeholder height
+        input::-webkit-input-placeholder {
+            font-size: 18px;
+        }
+        .NextButton  {
+            padding: 15px 25px;
+            color: white;
+            background-color: #0c7c71;
+            border: none;
+            font-size: 14px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+    }
+}

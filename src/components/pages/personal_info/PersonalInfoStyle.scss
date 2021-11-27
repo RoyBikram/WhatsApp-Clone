@@ -1,0 +1,81 @@
+.PersonalInfo {
+    .Container {
+        width: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .Heading {
+            font-size: 20px;
+            text-align: center;
+            color: #0c7c71;
+            font-weight: 500;
+            margin-bottom: 30px;
+        }
+        .ProfileContainer {
+            height: 200px;
+            width: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            border: 4px solid white;
+            position: relative;
+            box-shadow: 0px 0px 5px 0px #4a4a4a;
+            margin-bottom: 10px;
+            .Profile {
+                width: 100%;
+                position: absolute;
+            }
+            &:hover {
+                .HoverButton {
+                    opacity: 1;
+                }
+            }
+            .HoverButton {
+                background-color: rgba(0, 0, 0, 0.5);
+                color: rgb(255, 255, 255);
+                height: 100%;
+                width: 100%;
+                opacity: 0;
+                transition: 0.3s;
+                z-index: 10;
+                outline: none;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+            }
+        }
+        .Description {
+            color: rgb(78, 78, 78);
+            margin-bottom: 80px;
+        }
+        .InputName {
+            font-size: 20px;
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid #0c7c71;
+            outline: none;
+            color: rgb(78, 78, 78);
+            width: 200px;
+            text-align: center;
+            margin-bottom: 100px;
+            padding-bottom: 10px;
+            &:focus {
+            border-bottom: 2px solid #0c7c71;
+            margin-bottom: 99px;
+            }
+        }
+        input::-webkit-input-placeholder {
+            font-size: 18px;
+        }
+        .FinishedButton {
+            padding: 15px 25px;
+            color: white;
+            background-color: #0c7c71;
+            border: none;
+            font-size: 14px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    }
+}
