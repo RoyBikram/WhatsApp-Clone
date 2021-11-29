@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router";
 import "./StartPageStyle.scss";
 import { Link } from "react-router-dom";
+import {connect} from 'react-redux'
 
-export default function StartPage() {
+function StartPage({ User }) {
+    const navigate = useNavigate();
+    
+    useEffect(() => {
+        if (User) {
+            navigate("/");
+        }
+    }, [User,navigate]);
     return (
         <div className="StartPage">
             <div className="Container">
@@ -13,7 +22,7 @@ export default function StartPage() {
                         Read our <span>Privacy Policy</span>. Tap "Agree and
                         continue" to accept the <span>Terms of Service</span>.
                     </div>
-                    <Link to="/enter_number_page">
+                    <Link to="/login_page">
                         <button className="ContinueButton">
                             AGREE AND CONTINUE
                         </button>
@@ -23,3 +32,9 @@ export default function StartPage() {
         </div>
     );
 }
+
+const mapStateToProps = (state) => ({
+    User:state.User.CurrentUser
+})
+
+export default connect(mapStateToProps)(StartPage);

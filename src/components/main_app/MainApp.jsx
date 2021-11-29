@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
 import "./MainAppStyle.scss";
 import MessageSection from "./message_section/MessageSection";
 import SideSection from "./side_section/SideSection";
+import {connect} from 'react-redux'
 
-function MainApp() {
-    const [userState, setUserState ] = useState(false)
+function MainApp({User}) {
     const navigate = useNavigate();
     
     useEffect(() => {
-        if (!userState) {
+        if (!User) {
             navigate("/start_page");
         }
-    }, [userState,navigate]);
+    }, [User,navigate]);
     return (
         <div className="MainApp">
             <SideSection></SideSection>
@@ -21,4 +21,10 @@ function MainApp() {
     );
 }
 
-export default MainApp;
+
+const mapStateToProps = (state) => ({
+    User:state.User.CurrentUser
+})
+
+export default connect(mapStateToProps)(MainApp);
+

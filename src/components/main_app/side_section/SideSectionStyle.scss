@@ -30,8 +30,16 @@
                 display: grid;
                 place-items: center;
                 transition: all 0.3s;
+                overflow: hidden;
                 &:hover {
                     background-color: rgb(211, 211, 211);
+                }
+                button {
+                    background-color: transparent;
+                    border: none;
+                    cursor: pointer;
+                    height: 100%;
+                    width: 100%;
                 }
                 .StatusIcon,
                 .DotsIcon,
@@ -41,6 +49,11 @@
                     path {
                         fill: rgb(81, 88, 92);
                     }
+                }
+                .LogoutIcon {
+                    height: 24px;
+                    width: 24px;
+                    fill: rgb(81, 88, 92);
                 }
             }
         }
