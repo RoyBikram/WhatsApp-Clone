@@ -55,20 +55,28 @@ export const SignOutFromApp = () => {
 };
 
 export const CreateNewUser = async (User) => {
-    console.log(User)
-    let uid = User.uid;
+    let uid = User?.uid;
     const UserRef = doc(db, `Users/${uid}`);
     const UserSnap = await getDoc(UserRef);
     if (!UserSnap.exists()) {
         try {
-            await setDoc(UserRef,{
+            await setDoc(UserRef, {
                 Name: User.displayName,
                 Email: User.email,
                 ProfileImg: User.photoURL,
                 Uid: uid,
             });
-        } catch (error) {
-            console.log("error creating user", error.message);
-        }
+        } catch (error) {}
+    }
+};
+
+export const GetDataFromUid = async (uid) => {
+    const docRef = doc(db, `Users/${uid}`);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+       return docSnap.data()
+    } else {
+        console.log("No such document!");
     }
 };

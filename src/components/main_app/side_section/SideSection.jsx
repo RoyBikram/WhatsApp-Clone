@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import "./SideSectionStyle.scss";
 import Avatar from "../../commons/Avatar/Avatar";
 import { ReactComponent as StatusIcon } from "../../../assets/icons/status.svg";
@@ -13,8 +13,37 @@ import {SignOutFromApp} from '../../../firebase/firebase'
 const HandelDotsIconClick = () => {
     SignOutFromApp()
 }
-function SideSection({ ImgUrl }) {
 
+
+
+// const 
+
+function SideSection({ ImgUrl, SearchData,UserUid }) {
+    const [FilteredArray, SetFilterArray] = useState([])
+    // console.log(SearchData)
+
+    const HandelInputValueChange = (e) => {
+        e.preventDefault();
+        let ResultArray = []
+
+        if (e.target.value !== '') {
+            Object.values(SearchData).forEach((each) => {
+                if (each.Name.toLowerCase().includes(e.target.value.toLowerCase())) {
+                    if (each.Uid !== UserUid) {
+                        
+                        ResultArray.push(each.Uid);
+                    }
+                }
+            })
+        }
+        SetFilterArray(ResultArray)
+        
+    }
+
+    const HandelSearchSubmit = (e) => {
+        e.preventDefault();
+        console.log(FilteredArray)
+    }
 
     return (
         <div className="SideSection">
@@ -35,17 +64,25 @@ function SideSection({ ImgUrl }) {
                 </div>
             </div>
             <div className="Search">
-                <div className="SearchContainer">
+                <form onSubmit={HandelSearchSubmit} className="SearchContainer">
                     <SearchIcon className="SearchIcon"></SearchIcon>
                     <input
+                        onChange={HandelInputValueChange}
+                        required="required"
                         type="text"
                         className="SearchInput"
-                        placeholder="Search freands"
+                        placeholder="Search friends"
                     />
-                </div>
+                    <button type='submit'></button>
+                </form>
             </div>
             <div className="MessageOverviewList">
-                <MessageOverview></MessageOverview>
+                {
+                    FilteredArray.map((uid,index) => {
+                        return <MessageOverview FromSearch={true} uid={uid} key={index}></MessageOverview>
+                    })
+
+                }
             </div>
         </div>
     );
@@ -53,5 +90,7 @@ function SideSection({ ImgUrl }) {
 
 const mapStateToProps = (state) => ({
     ImgUrl: state.User.CurrentUser?.photoURL,
+    SearchData: state.SearchData.SearchData,
+    UserUid: state.User.CurrentUser?.uid
 });
 export default connect(mapStateToProps)(SideSection);
