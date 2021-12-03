@@ -5,7 +5,7 @@ import MessageSection from "./message_section/MessageSection";
 import SideSection from "./side_section/SideSection";
 import {connect} from 'react-redux'
 
-function MainApp({User}) {
+function MainApp({User,ActiveFriendUid}) {
     const navigate = useNavigate();
     
     useEffect(() => {
@@ -16,14 +16,18 @@ function MainApp({User}) {
     return (
         <div className="MainApp">
             <SideSection></SideSection>
-            <MessageSection></MessageSection>
+            {
+                (ActiveFriendUid)?<MessageSection></MessageSection>:<h1>Homepage</h1>
+            }
+            
         </div>
     );
 }
 
 
 const mapStateToProps = (state) => ({
-    User:state.User.CurrentUser
+    User: state.User.CurrentUser,
+    ActiveFriendUid: state.FriendsData.ActiveFriend
 })
 
 export default connect(mapStateToProps)(MainApp);

@@ -5,7 +5,7 @@ import {
     GoogleAuthProvider,
     signOut,
 } from "firebase/auth";
-import { doc, getFirestore, getDoc, setDoc } from "firebase/firestore";
+import { doc, getFirestore, getDoc, setDoc, addDoc, collection } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBx2QoevVz53Yf8hv68io0pnPWmIEvqlMo",
@@ -75,8 +75,43 @@ export const GetDataFromUid = async (uid) => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
+        // console.log(docSnap.data())
        return docSnap.data()
     } else {
         console.log("No such document!");
     }
 };
+
+export const CreateMessageStore = async (Uid) => {
+    const docRef = await addDoc(collection(db, "MessagesStore"), {
+        WhoCreated:Uid
+      });
+    return docRef.id
+}
+
+export const AddToYourFriend = async (MyUid, FriendUid,MessageLocationId) => {
+    // Add to my friend
+    const UserRef = doc(db, `Users/${MyUid}/Friends/${FriendUid}`);
+    const UserSnap = await getDoc(UserRef);
+    if (!UserSnap.exists()) {
+        try {
+            await setDoc(UserRef, {
+                MessageLocation:MessageLocationId
+            });
+        } catch (error) {}
+    }
+    // Add me to your friend
+    const FriendRef = doc(db, `Users/${FriendUid}/Friends/${MyUid}`);
+    const FriendSnap = await getDoc(FriendRef);
+    if (!FriendSnap.exists()) {
+        try {
+            await setDoc(FriendRef, {
+                MessageLocation:MessageLocationId
+            });
+        } catch (error) {}
+    }
+
+
+}
+
+

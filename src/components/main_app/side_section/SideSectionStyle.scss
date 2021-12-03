@@ -118,5 +118,11 @@
         &::-webkit-scrollbar-thumb {
             background: rgb(204, 204, 204);
         }
+        .MessageOverViewContainer {
+            width: 100%;
+            background-color: transparent;
+            border: none;
+            outline: none;
+        }
     }
 }

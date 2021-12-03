@@ -1,21 +1,18 @@
 import React, {useEffect, useState} from "react";
-import "./MessageOverview.scss";
+import './SearchResultItem.scss';
 import Avatar from "../../../commons/Avatar/Avatar";
 import { connect } from 'react-redux';
-import {GetDataFromUid} from '../../../../firebase/firebase'
 
-function MessageOverview({ uid,HandelClick,ActiveFriendUid }) {
+function SearchResultItem({uid,SearchData,HandelClick }) {
     // let UserData = {};
     const [UserData, SetUserData] = useState({});
 
-    const GetUserData = async (params) => {
-        let Data = null;
-        Data = await GetDataFromUid(uid)
-            SetUserData(Data)
-    }
+    // const GetUserData = (params) => {
+    //     let Data = null;
+    // }
 
     useEffect(() => {
-        GetUserData()
+        SetUserData(SearchData[uid])   
     },[uid])
     
     
@@ -23,19 +20,16 @@ function MessageOverview({ uid,HandelClick,ActiveFriendUid }) {
     return (
         <div onClick={() => {
             HandelClick(uid)
-        }} className={`MessageOverview ${(ActiveFriendUid===uid)?'Active':''}`}>
+        }} className="MessageOverview">
             <div className="ProfileContainer">
                 <Avatar ImgUrl={UserData?.ProfileImg} className="Avatar"></Avatar>
             </div>
             <div className="TextContainer">
                 <div className="NameContainer">
                     <div className="Name">{UserData?.Name}</div>
-                    <div className={`Time`}>
-                        Monday
-                    </div>
                 </div>
-                <div className={`LastMessage`}>
-                    Last Message
+                <div className={'Email'}>
+                    {UserData?.Email}
                 </div>
             </div>
         </div>
@@ -43,8 +37,7 @@ function MessageOverview({ uid,HandelClick,ActiveFriendUid }) {
 }
 
 const mapStateToProps = (state) => ({
-    SearchData: state.SearchData.SearchData,
-    ActiveFriendUid: state.FriendsData.ActiveFriend,
+    SearchData: state.SearchData.SearchData
 })
 
-export default connect(mapStateToProps)(MessageOverview);
+export default connect(mapStateToProps)(SearchResultItem);

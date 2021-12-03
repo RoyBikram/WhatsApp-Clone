@@ -4,7 +4,22 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    
+    position: relative;
+    background-color: rgb(233, 227, 220);
+    scroll-behavior: smooth;
+
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("../../../assets/img/message_body_bg.png");
+        opacity: 0.07;
+    }
+
     .Header {
         height: 60px;
         width: 100%;
@@ -13,10 +28,11 @@
         align-items: center;
         background-color: rgb(237, 237, 237);
         padding: 0px 16px;
+        z-index: 10;
         .Container {
             margin-left: 15px;
             display: flex;
-            width: 100%;
+            width: calc(100% - 55px);
             justify-content: space-between;
 
             .TextContainer {
@@ -26,7 +42,6 @@
                 .LastSeen {
                     font-size: 13px;
                     color: rgb(143, 143, 143);
-
                 }
             }
             .ButtonsContainer {
@@ -41,7 +56,8 @@
                     &:hover {
                         background-color: rgb(211, 211, 211);
                     }
-                    .SearchIcon,.DotsIcon {
+                    .SearchIcon,
+                    .DotsIcon {
                         path {
                             fill: rgb(81, 88, 92);
                         }
@@ -54,22 +70,22 @@
     .MessageBody {
         flex-grow: 1;
         position: relative;
-        background-color: rgb(233, 227, 220);
+        // background-color: rgb(233, 227, 220);
         display: flex;
         justify-content: center;
         overflow-y: auto;
         &::-webkit-scrollbar {
             width: 5px;
         }
-        
+
         /* Track */
         &::-webkit-scrollbar-track {
-            background: #ffffff00; 
+            background: #ffffff00;
         }
-        
+
         /* Handle */
         &::-webkit-scrollbar-thumb {
-            background: rgb(204, 204, 204); 
+            background: rgb(204, 204, 204);
         }
 
         .MessageContainer {
@@ -80,20 +96,8 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            background-color: rgb(233, 227, 220);
-            &::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-image: url('../../../assets/img/message_body_bg.png');
-                opacity: 0.07;
-            }
-            
+            margin-top: auto;
         }
-
     }
 
     .Footer {
@@ -105,6 +109,7 @@
         justify-content: space-between;
         align-items: center;
         padding: 0px 16px;
+        z-index: 10;
         .LeftButtonsContainer {
             display: flex;
             margin-right: 12px;
@@ -118,7 +123,8 @@
                 &:hover {
                     background-color: rgb(211, 211, 211);
                 }
-                .EmojiIcon,.DocumentIcon {
+                .EmojiIcon,
+                .DocumentIcon {
                     path {
                         fill: rgb(81, 88, 92);
                     }
@@ -152,16 +158,14 @@
                 margin: 10px 0px;
                 height: 42px;
                 font-size: 15px;
-                color: #4A4A4A;
+                color: #4a4a4a;
                 border-radius: 25px;
                 outline: none;
                 border: none;
-                
             }
             .SubmitButton {
                 display: none;
             }
         }
     }
-    
 }
