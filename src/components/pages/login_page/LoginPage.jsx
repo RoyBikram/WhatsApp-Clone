@@ -44,29 +44,26 @@ function LoginPage({SetCurrentUser,User}) {
                     alt="WhatsApp icon"
                     className="WhatsAppIcon"
                 />
-                <div className="Heading">Enter your phone number</div>
-                <div className="DescriptionText">
-                    WhatsApp will need to verify your phone number
-                </div>
-                <input
-                    required="required"
-                    placeholder="Enter your number"
-                    type="tel"
-                    className="InputNumber"
-                    pattern="[0-9]{10}"
-                />
-                <button type="submit" className="NextButton">
-                    SEND OTP
-                </button>
-                <div className="Divider">OR</div>
+                <div className="Heading">Login with your Google account</div>
+                <div className="DescriptionText">Google account is needed to identify you and store your data in a secure location.</div>
                 <button
                     onClick={HandelLoginWithGoogle}
                     type="button"
                     className="GoogleLoginButton"
                 >
                     <GoogleIcon className="GoogleIcon"></GoogleIcon>
-                    LOGIN WITH GOOGLE
+                    SIGNUP WITH GOOGLE
                 </button>
+                <div className="Divider">OR</div>
+                <div className="LoginText">Existing user ? 
+                <button
+                    onClick={HandelLoginWithGoogle}
+                    type="button"
+                    className="GoogleSignUpButton"
+                >
+                    Click Here
+                    </button>
+                    </div>
             </form>
         </div>
     );

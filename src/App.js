@@ -10,81 +10,137 @@ import { connect } from "react-redux";
 import { SetCurrentUser } from "./redux/User/UserAction";
 import { SetSearchData } from "./redux/Search/SearchAction";
 import { SetFriendsData } from "./redux/Friends/FriendsAction";
-import { collection, onSnapshot } from "firebase/firestore";
+import { SetMessages } from "./redux/Messages/MessagesAction";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "./firebase/firebase";
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 
-class App extends Component {
-    UnsubscribeFromAuth = null;
-    UnsubscribeFromSearchData = null;
-    UnsubscribeFromFriendsData = null;
-    componentDidMount() {
-        this.UnsubscribeFromAuth = getAuth().onAuthStateChanged((User) => {
-            this.props.SetCurrentUser(User);
-            this.FetchFriendsData();
-        });
-        this.FetchSearchData();
-    }
+function App({
+    SetCurrentUser,
+    SetFriendsData,
+    UserUid,
+    FriendsData,
+    SetSearchData,
+    SetMessagesData,
+}) {
 
-    FetchSearchData = async () => {
+    //* All the firebase connection breaker initialization
+
+    let UnsubscribeFromSearchData = null;
+    let UnsubscribeFromFriendsData = null;
+
+    // * Fetch user data from firebase for search field
+
+    const FetchSearchData = async () => {
         const SearchData = {};
-
         const q = collection(db, "Users");
-        this.UnsubscribeFromSearchData = onSnapshot(q, (querySnapshot) => {
+        UnsubscribeFromSearchData = onSnapshot(q, (querySnapshot) => {
             querySnapshot.forEach((doc) => {
-                // console.log(doc.data())
                 SearchData[doc.id] = doc.data();
             });
-            this.props.SetSearchData(SearchData);
+
+            SetSearchData(SearchData);
         });
     };
 
-    FetchFriendsData = async () => {
-        const FriendsData = {};
+    // * Fetch friends data from firebase for the sidebar MessageOverview
+
+    const FetchFriendsData = async () => {
+        // const FriendsData = {};
+
         try {
-            // console.log(this.props.UserUid)
-            const q = collection(db, `Users/${this.props.UserUid}/Friends`);
-            this.UnsubscribeFromFriendsData = onSnapshot(q, (querySnapshot) => {
+            // const Friend =[]
+            const colRef = collection(db, `Users/${UserUid}/Friends`);
+            let q = query(colRef, orderBy("LastActive" ,'desc'));
+            UnsubscribeFromFriendsData = onSnapshot(q, (querySnapshot) => {
+                const FriendsData = {};
                 querySnapshot.forEach((doc) => {
-                    
+                    // FriendsData[doc.id] = {
+                    //     // Messages:[]
+                    // };
                     FriendsData[doc.id] = doc.data();
+                    // added
+                    // Friend.push(doc.id)
                 });
                 // console.log(FriendsData)
-                this.props.SetFriendsData(FriendsData);
+                SetFriendsData(FriendsData);
+                // console.log(Friend)
+                // SetFriendsUid(Friend)
             });
         } catch (error) {
-            console.log(error.message)
+            console.log("Error in MessageSection", error.message);
         }
     };
 
-    componentWillUnmount() {
-        this.UnsubscribeFromAuth();
-        this.UnsubscribeFromSearchData();
-        this.UnsubscribeFromFriendsData();
-    }
+    useEffect(() => {
+        // console.log(FriendsData);
+        // const FriendsD = FriendsData
+        const FriendsUidArr = Object.keys(FriendsData);
+        if (FriendsUidArr.length > 0) {
+            const MessagesData = {};
+            FriendsUidArr.forEach((each, index) => {
+                const MessageLocation = FriendsData[each]?.MessageLocation;
+                let UnsubscribeFromMessageData = null;
 
-    render() {
-        return (
-            <div className="App">
-                <Routes>
-                    <Route exact path="/" element={<MainApp />} />
-                    <Route exact path="/start_page" element={<StartPage />} />
-                    <Route exact path="/login_page" element={<LoginPage />} />
-                    <Route
-                        exact
-                        path="/verify_number_page"
-                        element={<VerifyNumber />}
-                    />
-                    <Route
-                        exact
-                        path="/personal_info_page"
-                        element={<PersonalInfo />}
-                    />
-                    <Route exact path="*" element={<h1>No Page</h1>} />
-                </Routes>
-            </div>
-        );
-    }
+                let colRef = collection(
+                    db,
+                    `MessagesStore/${MessageLocation}/Messages`
+                );
+                let q = query(colRef, orderBy("Time"));
+                UnsubscribeFromMessageData = onSnapshot(q, (querySnapshot) => {
+                    const Data = [];
+                    querySnapshot.forEach((doc) => {
+                        Data.push(doc.data());
+                    });
+                    MessagesData[each] = {};
+                    MessagesData[each].Message = Data;
+                    SetMessagesData(MessagesData);
+                });
+            });
+        }
+
+        return () => {};
+    }, [FriendsData,SetMessagesData]);
+
+    useEffect(() => {
+    let UnsubscribeFromAuth = null;
+        UnsubscribeFromAuth = getAuth().onAuthStateChanged((User) => {
+            SetCurrentUser(User);
+        });
+        FetchSearchData();
+        return () => {
+            UnsubscribeFromAuth();
+            UnsubscribeFromSearchData();
+        };
+    }, [UserUid]);
+
+    useEffect(() => {
+        FetchFriendsData();
+        return () => {
+            UnsubscribeFromFriendsData();
+        };
+    }, [UserUid]);
+
+    return (
+        <div className="App">
+            <Routes>
+                <Route exact path="/" element={<MainApp />} />
+                <Route exact path="/start_page" element={<StartPage />} />
+                <Route exact path="/login_page" element={<LoginPage />} />
+                <Route
+                    exact
+                    path="/verify_number_page"
+                    element={<VerifyNumber />}
+                />
+                <Route
+                    exact
+                    path="/personal_info_page"
+                    element={<PersonalInfo />}
+                />
+                <Route exact path="*" element={<h1>No Page</h1>} />
+            </Routes>
+        </div>
+    );
 }
 
 const mapDispatchToProps = (dispatch) => ({
@@ -97,9 +153,13 @@ const mapDispatchToProps = (dispatch) => ({
     SetFriendsData: (FriendsData) => {
         dispatch(SetFriendsData(FriendsData));
     },
+    SetMessagesData: (MessagesData) => {
+        dispatch(SetMessages(MessagesData));
+    },
 });
 const mapStateToProps = (state) => ({
     UserUid: state.User.CurrentUser?.uid,
+    FriendsData: state.FriendsData.FriendsData,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

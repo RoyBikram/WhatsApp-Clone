@@ -5,7 +5,7 @@ import {
     GoogleAuthProvider,
     signOut,
 } from "firebase/auth";
-import { doc, getFirestore, getDoc, setDoc, addDoc, collection } from "firebase/firestore";
+import { doc, getFirestore, getDoc, setDoc, addDoc, collection,serverTimestamp} from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBx2QoevVz53Yf8hv68io0pnPWmIEvqlMo",
@@ -96,7 +96,8 @@ export const AddToYourFriend = async (MyUid, FriendUid,MessageLocationId) => {
     if (!UserSnap.exists()) {
         try {
             await setDoc(UserRef, {
-                MessageLocation:MessageLocationId
+                MessageLocation: MessageLocationId,
+                LastActive: serverTimestamp()
             });
         } catch (error) {}
     }
@@ -106,7 +107,8 @@ export const AddToYourFriend = async (MyUid, FriendUid,MessageLocationId) => {
     if (!FriendSnap.exists()) {
         try {
             await setDoc(FriendRef, {
-                MessageLocation:MessageLocationId
+                MessageLocation: MessageLocationId,
+                LastActive: serverTimestamp()
             });
         } catch (error) {}
     }

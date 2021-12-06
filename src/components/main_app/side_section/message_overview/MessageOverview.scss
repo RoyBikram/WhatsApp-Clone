@@ -10,9 +10,9 @@
     }
     .ProfileContainer {
         height: 100%;
-        width: 77px;
         display: grid;
         place-items: center;
+        padding: 0px 14px;
     }
     .TextContainer {
         border-bottom: 1px solid rgb(235, 235, 235);
@@ -20,7 +20,9 @@
         justify-content: center;
         flex-direction: column;
         height: 100%;
-        flex: auto;
+        flex-grow: 1;
+        overflow: hidden;
+
         .NameContainer {
             width: 100%;
             display: flex;
@@ -38,6 +40,11 @@
         .LastMessage {
             font-size: 14px;
             color: rgb(109, 109, 109);
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-top: 2px;
         }
         .DisplayNone {
             display: none;

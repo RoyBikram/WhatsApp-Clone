@@ -1,6 +1,6 @@
-export const SetFriendsData = (FriendsData) => ({
+export const SetFriendsData = (Data) => ({
     type: 'SET_FRIENDS_DATA',
-    payload: FriendsData
+    payload: Data
 })
 export const SetActiveFriend = (FriendUid) => ({
     type: 'SET_ACTIVE_FRIEND',

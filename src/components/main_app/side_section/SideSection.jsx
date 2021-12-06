@@ -1,94 +1,91 @@
-import React, {useState, useEffect} from "react";
+import React, { useState } from "react";
 import "./SideSectionStyle.scss";
 import Avatar from "../../commons/Avatar/Avatar";
 import { ReactComponent as StatusIcon } from "../../../assets/icons/status.svg";
 import { ReactComponent as MessageIcon } from "../../../assets/icons/message.svg";
-// import { ReactComponent as DotsIcon } from "../../../assets/icons/dots.svg";
 import { ReactComponent as SearchIcon } from "../../../assets/icons/search.svg";
 import { ReactComponent as LogoutIcon } from "../../../assets/icons/logout.svg";
-import MessageOverview from "./message_overview/MessageOverview";
-import MessageOverviewList from './message_overview_list/MessageOverviewList'
-import SearchResultItem from "./search_result_item/SearchResultItem.jsx";
+import { ReactComponent as CloseIcon } from "../../../assets/icons/close.svg";
 import { connect } from "react-redux";
-import {SetActiveFriend} from '../../../redux/Friends/FriendsAction'
-import { SignOutFromApp,CreateMessageStore,AddToYourFriend } from '../../../firebase/firebase'
-import Search from './search_bar/Search'
+import { SetActiveFriend } from "../../../redux/Friends/FriendsAction";
+import {
+    SignOutFromApp,
+    CreateMessageStore,
+    AddToYourFriend,
+} from "../../../firebase/firebase";
+import SearchResultItem from "./search_result_item/SearchResultItem.jsx";
+import MessageOverview from "./message_overview/MessageOverview";
+import { useRef } from "react";
+
+// *Function for logout
 
 const HandelDotsIconClick = () => {
-    SignOutFromApp()
-}
+    SignOutFromApp();
+};
 
+function SideSection({
+    ImgUrl,
+    SearchData,
+    UserUid,
+    FriendsData,
+    SetActiveFriend,
+}) {
+    const [SearchState, SetSearchState] = useState(false);
+    const [FilteredArray, SetFilterArray] = useState([]);
+    const SearchInput = useRef({});
 
-
-// const 
-
-function SideSection({ ImgUrl, SearchData, UserUid, FriendsData, SetActiveFriend }) {
-    // console.log(FriendsData)
-    const [SearchState, SetSearchState] = useState(false)
-    const [FilteredArray, SetFilterArray] = useState([])
-    // const [FriendList, SetFriendList] = useState(Object.keys(FriendsData))
-    // console.log(SearchData)
-
-    // useEffect(() => {
-    //     SetFriendList(Object.keys(FriendsData))
-    // }, [FriendsData])
-
+    // * Function to track the search input value and change the FilteredArray
 
     const HandelInputValueChange = (e) => {
         e.preventDefault();
-        let ResultArray = []
-
-        if (e.target.value !== '') {
+        let ResultArray = [];
+        if (e.target.value !== "") {
             Object.values(SearchData).forEach((each) => {
-                if (each.Name.toLowerCase().includes(e.target.value.toLowerCase())) {
+                if (
+                    each.Name.toLowerCase().includes(
+                        e.target.value.toLowerCase()
+                    )
+                ) {
                     if (each.Uid !== UserUid) {
-                        
                         ResultArray.push(each.Uid);
                     }
                 }
-            })
+            });
         } else {
-            ResultArray = []
+            ResultArray = [];
         }
-        SetFilterArray(ResultArray)
-        
-    }
-
-    const HandelSearchSubmit = (e) => {
-        e.preventDefault();
-        // console.log(FilteredArray)
-        // SetSearchState()
-    }
+        SetFilterArray(ResultArray);
+    };
 
     const HandelInputFocus = (e) => {
-        SetSearchState(true)
-    }
+        SetSearchState(true);
+    };
 
-    // !TODO Need to implement a close button
-    const HandelInputBlur = (e) => {
-        setTimeout(() => {
-            SetSearchState(false)
-            e.target.value = '';
-            HandelInputValueChange(e)
-        },300);
-    }
+    const HandelSearchClose = () => {
+        SetSearchState(false);
+        SearchInput.current.value = "";
+
+        // * Set the FilterArray value to the initial value
+        SetFilterArray([]);
+    };
 
     const HandelMessageOverviewClick = (Uid) => {
-        SetActiveFriend(Uid)
-    }
+        SetActiveFriend(Uid);
+    };
 
     const HandelSearchResultItemClick = async (Uid) => {
         if (Object.keys(FriendsData).includes(Uid)) {
-            SetActiveFriend(Uid)
+            // * If the user is in my friend
+            SetActiveFriend(Uid);
         } else {
-            const MessageLocationId = await CreateMessageStore(UserUid)
-            AddToYourFriend(UserUid,Uid,MessageLocationId)
-            // SetFriendList(Object.keys(FriendsData))
-            SetActiveFriend(Uid)
+            // * If the user is not in my friend the add him to my friend
+            const MessageLocationId = await CreateMessageStore(UserUid);
+            AddToYourFriend(UserUid, Uid, MessageLocationId);
+            SetActiveFriend(Uid);
         }
-        // console.log('work')
-        
-    }
+        HandelSearchClose();
+    };
+
 
     return (
         <div className="SideSection">
@@ -108,24 +105,46 @@ function SideSection({ ImgUrl, SearchData, UserUid, FriendsData, SetActiveFriend
                     </div>
                 </div>
             </div>
-            <Search HandelSearchSubmit={HandelSearchSubmit} HandelInputFocus={HandelInputFocus} HandelInputBlur={HandelInputBlur} HandelInputValueChange={HandelInputValueChange} SearchState={SearchState} ></Search>
-            {/* <div className="MessageOverviewList">
-                {  (SearchState)?FilteredArray.map((uid,index) => {
-                        return <SearchResultItem HandelClick={HandelSearchResultItemClick} uid={uid} key={index}></SearchResultItem>
-                    }):FriendList.map((uid,index) => {
-                        return <MessageOverview HandelClick={HandelMessageOverviewClick} uid={uid} key={index}></MessageOverview>
-                    })
-                }
-            </div> */}
-            <MessageOverviewList
-                SearchState={SearchState}
-                FilteredArray={FilteredArray}
-                // SearchResultItem={SearchResultItem}
-                HandelSearchResultItemClick={HandelSearchResultItemClick}
-                // FriendList={FriendList}
-                // MessageOverview={MessageOverview}
-                HandelMessageOverviewClick={HandelMessageOverviewClick}
-            ></MessageOverviewList>
+            <div className="Search">
+                <div className="SearchContainer">
+                    <SearchIcon className="SearchIcon"></SearchIcon>
+                    <input
+                        ref={SearchInput}
+                        onFocus={HandelInputFocus}
+                        onChange={HandelInputValueChange}
+                        required="required"
+                        type="text"
+                        className="SearchInput"
+                        placeholder="Search friends"
+                    />
+                    <CloseIcon
+                        onClick={HandelSearchClose}
+                        className={`CloseIcon ${SearchState ? "Opacity" : ""}`}
+                    ></CloseIcon>
+                    <button type="submit"></button>
+                </div>
+            </div>
+            <div className="MessageOverviewList">
+                {SearchState
+                    ? FilteredArray.map((uid, index) => {
+                          return (
+                              <SearchResultItem
+                                  HandelClick={HandelSearchResultItemClick}
+                                  uid={uid}
+                                  key={index}
+                              ></SearchResultItem>
+                          );
+                      })
+                    : Object.keys(FriendsData).map((uid, index) => {
+                          return (
+                              <MessageOverview
+                                  HandelClick={HandelMessageOverviewClick}
+                                  uid={uid}
+                                  key={index}
+                              ></MessageOverview>
+                          );
+                      })}
+            </div>
         </div>
     );
 }
@@ -134,11 +153,11 @@ const mapStateToProps = (state) => ({
     ImgUrl: state.User.CurrentUser?.photoURL,
     SearchData: state.SearchData.SearchData,
     UserUid: state.User.CurrentUser?.uid,
-    FriendsData: state.FriendsData?.FriendsData
+    FriendsData: state.FriendsData?.FriendsData,
 });
 const mapDispatchToProps = (dispatch) => ({
     SetActiveFriend: (Uid) => {
-        dispatch(SetActiveFriend(Uid)) 
-    }
-})
-export default connect(mapStateToProps,mapDispatchToProps)(SideSection);
+        dispatch(SetActiveFriend(Uid));
+    },
+});
+export default connect(mapStateToProps, mapDispatchToProps)(SideSection);

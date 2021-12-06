@@ -12,17 +12,14 @@ import { connect } from "react-redux";
 
 import {
     collection,
-    onSnapshot,
-    query,
-    orderBy,
     addDoc,
     doc,
-    getDoc,
     serverTimestamp,
+    updateDoc
 } from "firebase/firestore";
-import { db, GetDataFromUid } from "../../../firebase/firebase";
+import { db } from "../../../firebase/firebase";
 
-// To scroll into view the message
+//* To scroll into view the message
 
 const AlwaysScrollToBottom = () => {
     const elementRef = useRef();
@@ -30,129 +27,65 @@ const AlwaysScrollToBottom = () => {
     return <div ref={elementRef} />;
 };
 
-function MessageSection({ UserUid, ActiveFriendUid,FriendsData }) {
-    const [Input, setInput] = useState("");
-    const [MessageArray, SetMessageArray] = useState([]);
+function MessageSection({
+    UserUid,
+    ActiveFriendUid,
+    FriendsData,
+    MessagesData,
+    SearchData,
+}) {
+    const Input = useRef("");
+    const [MessageArray, SetMessageArray] = useState(null);
     const [MessageLocationId, SetMessageLocationId] = useState(null);
     const [ActiveUserData, SetActiveUserData] = useState(null);
-    const [LastMessage, SetLastMessage] = useState('')
+    // const [LastMessage, SetLastMessage] = useState('')
+
     useEffect(() => {
-        // setTimeout(() => {
-        // console.log(FriendsData)
-        // console.log(ActiveFriendUid)
-        // }, 5000);
         if (Object.keys(FriendsData).length !== 0) {
-            
-            SetMessageLocationId(FriendsData[ActiveFriendUid].MessageLocation)
+            SetMessageLocationId(FriendsData[ActiveFriendUid]?.MessageLocation);
         }
         GetActiveUserData();
-        // if (MessageLocationId !== null) {
-        //     let colRef = collection(
-        //         db,
-        //         `MessagesStore/${MessageLocationId}/Messages`
-        //     );
-        //     let q = query(colRef, orderBy("Time"));
-        //     UnsubscribeFromMessageData = onSnapshot(q, (querySnapshot) => {
-        //         const Data = [];
-        //         querySnapshot.forEach((doc) => {
-        //             Data.push(doc.data());
-        //         });
-        //         SetMessageArray(Data);
-        //     });
-        //     return () => {
-        //         UnsubscribeFromMessageData();
-        //     };
-        // }
-    }, [ActiveFriendUid,FriendsData]);
-
-    useEffect(() => {
-    let UnsubscribeFromMessageData = null;
-
-        if (MessageLocationId !== null) {
-            let colRef = collection(
-                db,
-                `MessagesStore/${MessageLocationId}/Messages`
-            );
-            let q = query(colRef, orderBy("Time"));
-            UnsubscribeFromMessageData = onSnapshot(q, (querySnapshot) => {
-                const Data = [];
-                querySnapshot.forEach((doc) => {
-                    Data.push(doc.data());
-                });
-                SetMessageArray(Data);
-                SetLastMessage(Data.at(-1))
-            });
-            return () => {
-                //! need to call inside app js
-                // UnsubscribeFromMessageData();
-            };
-        }
-        // setTimeout(() => {
-        //     console.log(MessageArray)
-        // }, 3000)
-        // console.log(ActiveUserData)
-    }, [MessageLocationId]);
+    }, [ActiveFriendUid, FriendsData]);
 
 
     useEffect(() => {
-        console.log(LastMessage.MessageBody)
-        return () => {
-        }
-    }, [LastMessage])
-
-    const GetMessageLocation = async () => {
-        if (ActiveFriendUid != null) {
-            const docRef = doc(
-                db,
-                `Users/${UserUid}/Friends/${ActiveFriendUid}`
-            );
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-                SetMessageLocationId(docSnap.data().MessageLocation);
-            } else {
-                console.log("No such document!");
-            }
-        }
-
-        // Added
-        
-        // let colRef = collection(
-        //     db,
-        //     `MessagesStore/${MessageLocationId}/Messages`
-        // );
-        // let q = query(colRef, orderBy("Time"));
-        // UnsubscribeFromMessageData = onSnapshot(q, (querySnapshot) => {
-        //     const Data = [];
-        //     querySnapshot.forEach((doc) => {
-        //         Data.push(doc.data());
-        //     });
-        //     SetMessageArray(Data);
-        // });
-        // return () => {
-        //     UnsubscribeFromMessageData();
-        // };
-    };
+        SetMessageArray(MessagesData);
+        return () => {};
+    }, [MessagesData, ActiveFriendUid]);
 
     const HandelSubmit = async (e) => {
         e.preventDefault();
-        setInput("");
+        const value = Input.current.value;
+        Input.current.value = "";
         await addDoc(
             collection(db, `MessagesStore/${MessageLocationId}/Messages`),
             {
-                MessageBody: Input,
+                MessageBody: value,
                 Owner: UserUid,
                 Time: serverTimestamp(),
             }
         );
+
+        const refTimeStampUser = doc(db, `Users/${UserUid}/Friends/${ActiveFriendUid}`);
+
+        // Set the "capital" field of the city 'DC'
+        await updateDoc(refTimeStampUser, {
+            LastActive: serverTimestamp(),
+        });
+        const refTimeStampFriend = doc(db, `Users/${ActiveFriendUid}/Friends/${UserUid}`);
+
+        // Set the "capital" field of the city 'DC'
+        await updateDoc(refTimeStampFriend, {
+            LastActive: serverTimestamp(),
+        });
+        Input.current.value = "";
     };
 
     const GetActiveUserData = async (params) => {
         let Data = null;
-        Data = await GetDataFromUid(ActiveFriendUid);
+        Data = SearchData[ActiveFriendUid];
         SetActiveUserData(Data);
     };
-
     return (
         <div className="MessageSection">
             <div className="Header">
@@ -163,7 +96,8 @@ function MessageSection({ UserUid, ActiveFriendUid,FriendsData }) {
                 <div className="Container">
                     <div className="TextContainer">
                         <div className="Name">{ActiveUserData?.Name}</div>
-                        <div className="LastSeen">7:20pm</div>
+                        {/*//! Needs to implement */}
+                        {/* <div className="LastSeen"></div> */}
                     </div>
                     <div className="ButtonsContainer">
                         <div className="IconContainer">
@@ -177,26 +111,26 @@ function MessageSection({ UserUid, ActiveFriendUid,FriendsData }) {
             </div>
             <div className="MessageBody">
                 <div className="MessageContainer">
-                    {
-                        
+                    {MessageArray == null ? (
+                        <div></div>
+                    ) : (
                         MessageArray.map((each, index) => {
-                        let OwnMessage = null;
-                        if (each.Owner === UserUid) {
-                            OwnMessage = true;
-                        } else {
-                            OwnMessage = false;
-                        }
-                        return (
-                            <Message
-                            Timestamp={
-                                    each.Time
-                                }
-                                key={index}
-                                OwnMessage={OwnMessage}
-                                MessageText={each.MessageBody}
-                            ></Message>
-                        );
-                    })}
+                            let OwnMessage = null;
+                            if (each.Owner === UserUid) {
+                                OwnMessage = true;
+                            } else {
+                                OwnMessage = false;
+                            }
+                            return (
+                                <Message
+                                    Timestamp={each.Time}
+                                    key={index}
+                                    OwnMessage={OwnMessage}
+                                    MessageText={each.MessageBody}
+                                ></Message>
+                            );
+                        })
+                    )}
                     <AlwaysScrollToBottom></AlwaysScrollToBottom>
                 </div>
             </div>
@@ -212,10 +146,11 @@ function MessageSection({ UserUid, ActiveFriendUid,FriendsData }) {
 
                 <form onSubmit={HandelSubmit} action="">
                     <input
-                        value={Input}
-                        onChange={(e) => {
-                            setInput(e.target.value);
-                        }}
+                        // value={Input}
+                        ref={Input}
+                        // onChange={(e) => {
+                        //     // setInput(e.target.value);
+                        // }}
                         placeholder="Type a message"
                         type="text"
                         className="TypingAria"
@@ -236,7 +171,10 @@ function MessageSection({ UserUid, ActiveFriendUid,FriendsData }) {
 const mapStateToProps = (state) => ({
     UserUid: state.User.CurrentUser?.uid,
     ActiveFriendUid: state.FriendsData.ActiveFriend,
-    FriendsData:state.FriendsData?.FriendsData
+    FriendsData: state.FriendsData?.FriendsData,
+    SearchData: state.SearchData.SearchData,
+    MessagesData:
+        state.Messages?.Messages[state.FriendsData.ActiveFriend]?.Message,
 });
 
 export default connect(mapStateToProps)(MessageSection);

@@ -86,6 +86,7 @@
                 outline: transparent;
                 padding: 0px 30px;
                 font-size: 14px;
+                width: 100%;
                 &::placeholder {
                     color: rgb(167, 167, 167);
                 }
@@ -93,6 +94,19 @@
                     /* Microsoft Edge */
                     color: rgb(167, 167, 167);
                 }
+            }
+            .CloseIcon {
+                opacity: 0;
+                transition: opacity 0.2s;
+                cursor: pointer;
+                display: none;
+                path {
+                    fill: rgb(81, 88, 92);
+                }
+            }
+            .Opacity {
+                opacity: 1;
+                display: inline-block;
             }
             button {
                 display: none;

@@ -1,0 +1,35 @@
+.HomeSection {
+    height: 100%;
+    width: 100%;
+    background-color: #ededed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-bottom: 6px solid #19b845;
+    .WhatsAppIcon {
+        height: 120px;
+        margin-bottom: 30px;
+    }
+    .AboutProject {
+        color: rgba(102, 102, 102, 1);
+        font-size: 20px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    a {
+        font-size: 16px;
+        padding: 5px 12px 6px 12px;
+        color: white;
+        background-color: #19b845;
+        border-radius: 20px;
+        transition: 0.2s;
+        border: 3px solid white;
+        box-shadow: 0px 0px 6px #c6c6c6;
+        &:hover {
+        background-color: #149639;
+        box-shadow: 0px 0px 20px #c6c6c6;
+
+        }
+    }
+}

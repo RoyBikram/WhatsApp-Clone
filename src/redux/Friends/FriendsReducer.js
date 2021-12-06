@@ -1,6 +1,7 @@
 const InitialState = {
     FriendsData: {},
-    ActiveFriend: null
+    ActiveFriend: null,
+    // Messages: []
 }
 
 const FriendsReducer = (state = InitialState, action) => {
@@ -15,7 +16,6 @@ const FriendsReducer = (state = InitialState, action) => {
                 ...state,
                 ActiveFriend:action.payload
             })
-    
         default:
             return state;
     }
