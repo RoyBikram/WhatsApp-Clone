@@ -100,7 +100,7 @@ function App({
         }
 
         return () => {};
-    }, [FriendsData,SetMessagesData]);
+    }, [Object.keys(FriendsData).length,SetMessagesData]);
 
     useEffect(() => {
     let UnsubscribeFromAuth = null;

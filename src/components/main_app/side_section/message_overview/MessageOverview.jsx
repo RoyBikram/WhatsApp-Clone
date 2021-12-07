@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import "./MessageOverview.scss";
 import Avatar from "../../../commons/Avatar/Avatar";
 import { connect } from "react-redux";
+import {SearchDataSelector} from '../../../../redux/Search/SearchSelector'
+import {MessageSelector} from '../../../../redux/Messages/MessagesSelector'
+import {ActiveFriendUidSelector} from '../../../../redux/Friends/FriendsSelector'
 
 function MessageOverview({
     uid,
@@ -10,12 +13,11 @@ function MessageOverview({
     SearchData,
     Messages
 }) {
-    // console.log(Messages)
     const [UserData, SetUserData] = useState(null);
     const [LastMessage, SetLastMessage] = useState('');
     const [LastTime ,SetLastTime] = useState(null)
     useEffect(() => {
-        if (Messages?.length > 0) {
+        if (Messages?.at(-1)?.Time) {
             const Time = new Date(Messages.at(-1)?.Time?.toDate()).toLocaleTimeString("en-US").split(" ");
             const ArrTime = `${Time[0].substring(
                 0,
@@ -26,15 +28,14 @@ function MessageOverview({
             SetLastTime('')
 
         }
-    }, [Messages?.length]);
+    }, [Messages]);
 
     useEffect(() => {
-        console.log('p')
         SetUserData(SearchData[uid]);
     }, [uid]);
     
 
-    useEffect(() => {
+    useMemo(() => {
         if (Messages?.length > 0) {
             if (Messages.at(-1)?.Owner === uid) {
                 SetLastMessage(Messages.at(-1)?.MessageBody)
@@ -72,9 +73,9 @@ function MessageOverview({
 }
 
 const mapStateToProps = (state,props) => ({
-    SearchData: state.SearchData.SearchData,
-    ActiveFriendUid: state.FriendsData.ActiveFriend,
-    Messages: state.Messages.Messages[props.uid]?.Message
+    SearchData: SearchDataSelector(state),
+    ActiveFriendUid: ActiveFriendUidSelector(state),
+    Messages: MessageSelector({state:state,uid:props.uid})
 });
 
 export default connect(mapStateToProps)(MessageOverview);

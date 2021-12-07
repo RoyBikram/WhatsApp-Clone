@@ -16,6 +16,12 @@ import {
 import SearchResultItem from "./search_result_item/SearchResultItem.jsx";
 import MessageOverview from "./message_overview/MessageOverview";
 import { useRef } from "react";
+import { useEffect } from "react";
+import {ImgUrlSelector} from '../../../redux/User/UserSelector'
+import {UserUidSelector} from '../../../redux/User/UserSelector'
+import {SearchDataSelector} from '../../../redux/Search/SearchSelector'
+import {FriendsUidSelector} from '../../../redux/Friends/FriendsSelector'
+import { useCallback } from "react";
 
 // *Function for logout
 
@@ -32,6 +38,7 @@ function SideSection({
 }) {
     const [SearchState, SetSearchState] = useState(false);
     const [FilteredArray, SetFilterArray] = useState([]);
+    const [Friends, SetFriends] = useState(null)
     const SearchInput = useRef({});
 
     // * Function to track the search input value and change the FilteredArray
@@ -69,9 +76,18 @@ function SideSection({
         SetFilterArray([]);
     };
 
-    const HandelMessageOverviewClick = (Uid) => {
-        SetActiveFriend(Uid);
-    };
+    const CallbackHandelMessageOverviewClick = useCallback(
+        (Uid) => {
+            SetActiveFriend(Uid);
+            // const HandelMessageOverviewClick = (Uid) => {
+            // }
+            
+        },
+        [],
+    )
+    // const HandelMessageOverviewClick = (Uid) => {
+    //     SetActiveFriend(Uid);
+    // };
 
     const HandelSearchResultItemClick = async (Uid) => {
         if (Object.keys(FriendsData).includes(Uid)) {
@@ -86,6 +102,13 @@ function SideSection({
         HandelSearchClose();
     };
 
+
+    // useEffect(() => {
+    //     SetFriends(Object.keys(FriendsData))
+    //     // console.log('Frienddata')
+    //     return () => {
+    //     }
+    // }, [FriendsData])
 
     return (
         <div className="SideSection">
@@ -135,10 +158,10 @@ function SideSection({
                               ></SearchResultItem>
                           );
                       })
-                    : Object.keys(FriendsData).map((uid, index) => {
+                    : FriendsData?.map((uid, index) => {
                           return (
                               <MessageOverview
-                                  HandelClick={HandelMessageOverviewClick}
+                                  HandelClick={CallbackHandelMessageOverviewClick}
                                   uid={uid}
                                   key={index}
                               ></MessageOverview>
@@ -150,10 +173,14 @@ function SideSection({
 }
 
 const mapStateToProps = (state) => ({
-    ImgUrl: state.User.CurrentUser?.photoURL,
-    SearchData: state.SearchData.SearchData,
-    UserUid: state.User.CurrentUser?.uid,
-    FriendsData: state.FriendsData?.FriendsData,
+    // ImgUrl: state.User.CurrentUser?.photoURL,
+    // SearchData: state.SearchData.SearchData,
+    // UserUid: state.User.CurrentUser?.uid,
+    // FriendsData: state.FriendsData?.FriendsData,
+    ImgUrl: ImgUrlSelector(state),
+    SearchData: SearchDataSelector(state),
+    UserUid: UserUidSelector(state),
+    FriendsData: FriendsUidSelector(state)
 });
 const mapDispatchToProps = (dispatch) => ({
     SetActiveFriend: (Uid) => {

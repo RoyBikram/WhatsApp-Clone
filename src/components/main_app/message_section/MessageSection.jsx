@@ -39,6 +39,8 @@ function MessageSection({
     const [MessageLocationId, SetMessageLocationId] = useState(null);
     const [ActiveUserData, SetActiveUserData] = useState(null);
     // const [LastMessage, SetLastMessage] = useState('')
+    let RenderUser = null;
+    let DisplayArrow = null;
 
     useEffect(() => {
         if (Object.keys(FriendsData).length !== 0) {
@@ -121,12 +123,19 @@ function MessageSection({
                             } else {
                                 OwnMessage = false;
                             }
+                            if (RenderUser === each.Owner) {
+                                DisplayArrow = false
+                            } else {
+                                RenderUser = each.Owner
+                                DisplayArrow = true
+                            }
                             return (
                                 <Message
                                     Timestamp={each.Time}
                                     key={index}
                                     OwnMessage={OwnMessage}
                                     MessageText={each.MessageBody}
+                                    DisplayArrow={DisplayArrow}
                                 ></Message>
                             );
                         })

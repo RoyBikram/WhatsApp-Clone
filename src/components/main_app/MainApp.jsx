@@ -5,6 +5,7 @@ import MessageSection from "./message_section/MessageSection";
 import SideSection from "./side_section/SideSection";
 import { connect } from 'react-redux'
 import HomeSection from './home_section/HomeSection'
+import {ActiveFriendUidSelector} from '../../redux/Friends/FriendsSelector'
 
 function MainApp({User,ActiveFriendUid}) {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ function MainApp({User,ActiveFriendUid}) {
 
 const mapStateToProps = (state) => ({
     User: state.User.CurrentUser,
-    ActiveFriendUid: state.FriendsData.ActiveFriend
+    ActiveFriendUid: ActiveFriendUidSelector(state)
 })
 
 export default connect(mapStateToProps)(MainApp);
