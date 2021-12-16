@@ -23,7 +23,6 @@ function App({
     SetSearchData,
     SetMessagesData,
 }) {
-
     //* All the firebase connection breaker initialization
 
     let UnsubscribeFromSearchData = null;
@@ -51,7 +50,7 @@ function App({
         try {
             // const Friend =[]
             const colRef = collection(db, `Users/${UserUid}/Friends`);
-            let q = query(colRef, orderBy("LastActive" ,'desc'));
+            let q = query(colRef, orderBy("LastActive", "desc"));
             UnsubscribeFromFriendsData = onSnapshot(q, (querySnapshot) => {
                 const FriendsData = {};
                 querySnapshot.forEach((doc) => {
@@ -76,18 +75,18 @@ function App({
         // console.log(FriendsData);
         // const FriendsD = FriendsData
         const FriendsUidArr = Object.keys(FriendsData);
+        let UnsubscribeFromMessageData = [];
         if (FriendsUidArr.length > 0) {
             const MessagesData = {};
             FriendsUidArr.forEach((each, index) => {
                 const MessageLocation = FriendsData[each]?.MessageLocation;
-                let UnsubscribeFromMessageData = null;
 
                 let colRef = collection(
                     db,
                     `MessagesStore/${MessageLocation}/Messages`
                 );
                 let q = query(colRef, orderBy("Time"));
-                UnsubscribeFromMessageData = onSnapshot(q, (querySnapshot) => {
+                const UnsubscribeFromThisMessage = onSnapshot(q, (querySnapshot) => {
                     const Data = [];
                     querySnapshot.forEach((doc) => {
                         Data.push(doc.data());
@@ -96,14 +95,19 @@ function App({
                     MessagesData[each].Message = Data;
                     SetMessagesData(MessagesData);
                 });
+                UnsubscribeFromMessageData.push(UnsubscribeFromThisMessage)
             });
         }
 
-        return () => {};
-    }, [Object.keys(FriendsData).length,SetMessagesData]);
+        return () => {
+            UnsubscribeFromMessageData.forEach((each) => {
+                each()
+            })
+        };
+    }, [Object.keys(FriendsData).length, SetMessagesData]);
 
     useEffect(() => {
-    let UnsubscribeFromAuth = null;
+        let UnsubscribeFromAuth = null;
         UnsubscribeFromAuth = getAuth().onAuthStateChanged((User) => {
             SetCurrentUser(User);
         });
