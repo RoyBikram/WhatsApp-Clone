@@ -160,6 +160,7 @@ function MessageSection({
                         // onChange={(e) => {
                         //     // setInput(e.target.value);
                         // }}
+                        required="required"
                         placeholder="Type a message"
                         type="text"
                         className="TypingAria"
