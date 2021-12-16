@@ -1,4 +1,8 @@
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+
+
 import {
     getAuth,
     signInWithPopup,
@@ -7,18 +11,74 @@ import {
 } from "firebase/auth";
 import { doc, getFirestore, getDoc, setDoc, addDoc, collection,serverTimestamp} from "firebase/firestore";
 
+
+
+
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyBx2QoevVz53Yf8hv68io0pnPWmIEvqlMo",
-    authDomain: "whatsapp-clone-e25da.firebaseapp.com",
-    projectId: "whatsapp-clone-e25da",
-    storageBucket: "whatsapp-clone-e25da.appspot.com",
-    messagingSenderId: "1063040707979",
-    appId: "1:1063040707979:web:c7f98475b1801c8ff9138e",
-    measurementId: "G-BLRY8J41DF",
+  apiKey: "AIzaSyCkUXlKNpMPaAxZ9Ki_P_TGeiVcAPB5hU8",
+  authDomain: "my-whatsapp-eebf1.firebaseapp.com",
+  projectId: "my-whatsapp-eebf1",
+  storageBucket: "my-whatsapp-eebf1.appspot.com",
+  messagingSenderId: "205236177179",
+  appId: "1:205236177179:web:dfcaf97249a851c3936bbe",
+  measurementId: "G-4GJRGP37YD"
 };
 
 // Initialize Firebase
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { initializeApp } from "firebase/app";
+
+
+// const firebaseConfig = {
+//     apiKey: "AIzaSyBx2QoevVz53Yf8hv68io0pnPWmIEvqlMo",
+//     authDomain: "whatsapp-clone-e25da.firebaseapp.com",
+//     projectId: "whatsapp-clone-e25da",
+//     storageBucket: "whatsapp-clone-e25da.appspot.com",
+//     messagingSenderId: "1063040707979",
+//     appId: "1:1063040707979:web:c7f98475b1801c8ff9138e",
+//     measurementId: "G-BLRY8J41DF",
+// };
+
+// Initialize Firebase
+// initializeApp(firebaseConfig);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
 export const db = getFirestore();

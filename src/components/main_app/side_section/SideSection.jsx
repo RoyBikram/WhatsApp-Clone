@@ -16,7 +16,7 @@ import {
 import SearchResultItem from "./search_result_item/SearchResultItem.jsx";
 import MessageOverview from "./message_overview/MessageOverview";
 import { useRef } from "react";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import {ImgUrlSelector} from '../../../redux/User/UserSelector'
 import {UserUidSelector} from '../../../redux/User/UserSelector'
 import {SearchDataSelector} from '../../../redux/Search/SearchSelector'
@@ -38,7 +38,7 @@ function SideSection({
 }) {
     const [SearchState, SetSearchState] = useState(false);
     const [FilteredArray, SetFilterArray] = useState([]);
-    const [Friends, SetFriends] = useState(null)
+    // const [Friends, SetFriends] = useState(null)
     const SearchInput = useRef({});
 
     // * Function to track the search input value and change the FilteredArray
