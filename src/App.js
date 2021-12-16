@@ -12,7 +12,7 @@ import { SetSearchData } from "./redux/Search/SearchAction";
 import { SetFriendsData } from "./redux/Friends/FriendsAction";
 import { SetMessages } from "./redux/Messages/MessagesAction";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
-import { db } from "./firebase/firebase";
+import { db } from "./firebase/firebase.js";
 import React, { useEffect } from "react";
 
 function App({
