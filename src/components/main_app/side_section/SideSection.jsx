@@ -70,7 +70,9 @@ function SideSection({
 
     const HandelSearchClose = () => {
         SetSearchState(false);
-        SearchInput.current.value = "";
+        if (SearchInput.current) {
+            SearchInput.current.value = ""
+        }
 
         // * Set the FilterArray value to the initial value
         SetFilterArray([]);

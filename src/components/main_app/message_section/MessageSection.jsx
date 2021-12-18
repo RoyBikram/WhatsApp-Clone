@@ -2,11 +2,14 @@ import React from "react";
 import "./MessageSectionStyle.scss";
 import Avatar from "../../commons/Avatar/Avatar";
 import Message from "./Message/Message";
+import { SetActiveFriend } from "../../../redux/Friends/FriendsAction";
+
 import { ReactComponent as SearchIcon } from "../../../assets/icons/search.svg";
 import { ReactComponent as DotsIcon } from "../../../assets/icons/dots.svg";
 import { ReactComponent as EmojiIcon } from "../../../assets/icons/emoji.svg";
 import { ReactComponent as DocumentIcon } from "../../../assets/icons/document.svg";
 import { ReactComponent as MicIcon } from "../../../assets/icons/mic.svg";
+import { ReactComponent as BackArrowIcon } from "../../../assets/icons/back_arrow.svg";
 import { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 
@@ -15,7 +18,7 @@ import {
     addDoc,
     doc,
     serverTimestamp,
-    updateDoc
+    updateDoc,
 } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 
@@ -33,6 +36,7 @@ function MessageSection({
     FriendsData,
     MessagesData,
     SearchData,
+    SetActiveFriend
 }) {
     const Input = useRef("");
     const [MessageArray, SetMessageArray] = useState(null);
@@ -42,13 +46,31 @@ function MessageSection({
     let RenderUser = null;
     let DisplayArrow = null;
 
+    const MessageContainerRef = useRef(null);
+    const getWidth = () =>
+        MessageContainerRef.current
+            ? MessageContainerRef.current.clientWidth
+            : 0;
+
+    let [MessageMaxWidth, setMessageMaxWidth] = useState(null);
+
+    useEffect(() => {
+        const resizeListener = () => {
+            setMessageMaxWidth(getWidth());
+        };
+        setMessageMaxWidth(getWidth());
+        window.addEventListener("resize", resizeListener);
+        return () => {
+            window.removeEventListener("resize", resizeListener);
+        };
+    }, []);
+
     useEffect(() => {
         if (Object.keys(FriendsData).length !== 0) {
             SetMessageLocationId(FriendsData[ActiveFriendUid]?.MessageLocation);
         }
         GetActiveUserData();
     }, [ActiveFriendUid, FriendsData]);
-
 
     useEffect(() => {
         SetMessageArray(MessagesData);
@@ -68,13 +90,19 @@ function MessageSection({
             }
         );
 
-        const refTimeStampUser = doc(db, `Users/${UserUid}/Friends/${ActiveFriendUid}`);
+        const refTimeStampUser = doc(
+            db,
+            `Users/${UserUid}/Friends/${ActiveFriendUid}`
+        );
 
         // Set the "capital" field of the city 'DC'
         await updateDoc(refTimeStampUser, {
             LastActive: serverTimestamp(),
         });
-        const refTimeStampFriend = doc(db, `Users/${ActiveFriendUid}/Friends/${UserUid}`);
+        const refTimeStampFriend = doc(
+            db,
+            `Users/${ActiveFriendUid}/Friends/${UserUid}`
+        );
 
         // Set the "capital" field of the city 'DC'
         await updateDoc(refTimeStampFriend, {
@@ -88,9 +116,18 @@ function MessageSection({
         Data = SearchData[ActiveFriendUid];
         SetActiveUserData(Data);
     };
+
+    const HandelBackButtonClick = () => {
+        SetActiveFriend(null)
+    }
+
+
     return (
         <div className="MessageSection">
             <div className="Header">
+                <div className="IconContainer">
+                    <BackArrowIcon onClick={HandelBackButtonClick} className="BackArrowIcon"></BackArrowIcon>
+                </div>
                 <Avatar
                     Small={true}
                     ImgUrl={ActiveUserData?.ProfileImg}
@@ -112,7 +149,7 @@ function MessageSection({
                 </div>
             </div>
             <div className="MessageBody">
-                <div className="MessageContainer">
+                <div ref={MessageContainerRef} className="MessageContainer">
                     {MessageArray == null ? (
                         <div></div>
                     ) : (
@@ -124,13 +161,14 @@ function MessageSection({
                                 OwnMessage = false;
                             }
                             if (RenderUser === each.Owner) {
-                                DisplayArrow = false
+                                DisplayArrow = false;
                             } else {
-                                RenderUser = each.Owner
-                                DisplayArrow = true
+                                RenderUser = each.Owner;
+                                DisplayArrow = true;
                             }
                             return (
                                 <Message
+                                    MessageMaxWidth={MessageMaxWidth}
                                     Timestamp={each.Time}
                                     key={index}
                                     OwnMessage={OwnMessage}
@@ -187,4 +225,10 @@ const mapStateToProps = (state) => ({
         state.Messages?.Messages[state.FriendsData.ActiveFriend]?.Message,
 });
 
-export default connect(mapStateToProps)(MessageSection);
+const mapDispatchToProps = (dispatch) => ({
+    SetActiveFriend: (Uid) => {
+        dispatch(SetActiveFriend(Uid));
+    },
+});
+
+export default connect(mapStateToProps,mapDispatchToProps)(MessageSection);

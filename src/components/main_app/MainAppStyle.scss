@@ -7,3 +7,10 @@
     
     background-color: white;
 }
+
+@media screen and (max-width: 985px) {
+    .MainApp {
+        height: 100vh;
+        width: 100vw;
+    }
+  }

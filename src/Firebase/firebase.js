@@ -29,42 +29,6 @@ const firebaseConfig = {
   measurementId: "G-4GJRGP37YD"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { initializeApp } from "firebase/app";
 
 
 // const firebaseConfig = {
@@ -77,6 +41,46 @@ const analytics = getAnalytics(app);
 //     measurementId: "G-BLRY8J41DF",
 // };
 
+
+
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Initialize Firebase
 // initializeApp(firebaseConfig);
 const auth = getAuth();
@@ -85,7 +89,7 @@ export const db = getFirestore();
 
 export const LoginWithGoogle = () => {
     const user = signInWithPopup(auth, provider)
-        .then((result) => {
+    .then((result) => {
             // This gives you a Google Access Token. You can use it to access the Google API.
             // const credential = GoogleAuthProvider.credentialFromResult(result);
             // const token = credential.accessToken;
@@ -97,7 +101,7 @@ export const LoginWithGoogle = () => {
         })
         .catch((error) => {
             // Handle Errors here.
-            // console.log(error.message);
+            console.log(error.message);
             // const credential = GoogleAuthProvider.credentialFromError(error);
             // ...
         });

@@ -29,10 +29,25 @@
         background-color: rgb(237, 237, 237);
         padding: 0px 16px;
         z-index: 10;
+        .IconContainer {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            display: grid;
+            place-items: center;
+            margin-right: 10px;
+            &:hover {
+                background-color: rgb(211, 211, 211);
+            }
+            .BackArrowIcon {
+                height: 15px;
+            }
+        }
         .Container {
             margin-left: 15px;
             display: flex;
-            width: calc(100% - 55px);
+            width: calc(100% - 105px);
             justify-content: space-between;
 
             .TextContainer {
@@ -169,3 +184,33 @@
         }
     }
 }
+
+@media only screen and (max-width: 480px) {
+    .MessageSection {
+        .Header,.Footer{
+            padding: 0px 5px;
+        }
+        .Footer {
+            .LeftButtonsContainer {
+                margin-right: 5px;
+                
+            }
+            .RightButtonsContainer {
+                margin-left: 5px;
+            }
+        }
+        .MessageBody {
+            margin: 60px 0px
+            // padding-bottom: 60px;
+        }
+        .Header {
+            position: fixed;
+            z-index: 1000;
+        }
+        .Footer {
+            bottom: 0;
+            position: fixed;
+            z-index: 1000;
+        }
+    }
+  }

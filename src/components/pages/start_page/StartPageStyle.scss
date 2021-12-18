@@ -44,3 +44,18 @@
         }
     }
 }
+
+@media only screen and (max-width: 480px) {
+    .StartPage {
+        .Container {
+            width: 100%;
+            padding: 0px 20px;
+            .Heading {
+                font-size: 30px;
+                margin-bottom: 30px;
+            }
+
+        }
+
+    }
+  }
